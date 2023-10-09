@@ -1,21 +1,25 @@
+@Library('ashokit_shared_lib') _
 
 pipeline {
-    agent any
-    
+    agent any    
     tools{
         maven "Maven-3.9.4"
     }
-
     stages {
         stage('Clone') {
             steps {
-                git 'https://github.com/saikrishnabalerao/sharedlibrary.git'
+             git branch: 'main', credentialsId: 'GIT-CREDENTIALS', url: 'https://github.com/ashokitschool/courses_web_app.git'
             }
         }
-         stage('Build') {
-            steps {
-                sh 'mvn clean package'
+        stage('Maven Build'){
+            steps{
+              mavenBuild()
             }
         }
+		stage('Code Review'){
+			steps{
+				sonarQube()
+			}
+		}
     }
 }
